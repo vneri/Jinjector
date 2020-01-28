@@ -11,22 +11,42 @@ Jinjector.init = function(){
 			Jinjector.config = JSON.parse(d);
 			Jinjector.status = 'loading';
 			
-			Jinjector.config.scripts.forEach(function(script){
-					var newScript = document.createElement('script');
-					if (Jinjector.config.outPutOnConsole){
-						console.log('----');
-						console.log('Loading script "' + script.name + '"...');
-						console.log('Description:' + script.description);
-						console.log('URL: ' + script.URL);
-						newScript.onload = function () {
-							console.log('Script "' + script.name + '" has been loaded');
-						};
+			if (Jinjector.config.scripts != null){
+				Jinjector.config.scripts.forEach(function(script){
+						var newScript = document.createElement('script');
+						if (Jinjector.config.outPutOnConsole){
+							console.log('----');
+							console.log('Loading script "' + script.name + '"...');
+							console.log('Description:' + script.description);
+							console.log('URL: ' + script.URL);
+							newScript.onload = function () {
+								console.log('Script "' + script.name + '" has been loaded');
+							};
+						}
+						newScript.src = script.URL;
+						document.head.appendChild(newScript);
 					}
-					newScript.src = script.URL;
-					document.head.appendChild(newScript);
-				}
-			);
-			
+				);
+			}
+			if (Jinjector.config.stylesheets != null){ 
+				Jinjector.config.stylesheets.forEach(function(stylesheet){
+						var stylesheet = document.createElement("link")
+						if (Jinjector.config.outPutOnConsole){
+							console.log('----');
+							console.log('Loading stylesheet "' + stylesheet.name + '"...');
+							console.log('Description:' + stylesheet.description);
+							console.log('URL: ' + stylesheet.URL);
+							newScript.onload = function () {
+								console.log('Script "' + script.name + '" has been loaded');
+							};
+						}
+						stylesheet.setAttribute("rel", "stylesheet");
+						stylesheet.setAttribute("type", "text/css");
+						stylesheet.setAttribute("href", stylesheet.URL);
+						document.head.appendChild(stylesheet);
+					}
+				);
+			}			
 			Jinjector.status = 'loaded';
 		});
 	} catch(e){
@@ -46,11 +66,9 @@ Jinjector.Xhr={
 			xmlhttp=new XMLHttpRequest();
 		} else {// code for IE6, IE5
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		}		
-		
+		}
 		
 		xmlhttp.onreadystatechange=function(){
-			
 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
 				callback(xmlhttp.responseText);
 			}
