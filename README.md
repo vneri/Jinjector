@@ -1,13 +1,13 @@
 # Jinjector
-Easily inject JavaScript by specifying files in a configuration, without having to change the target site.
-Useful when you cannot use GTM for loading external scripts.
+Easily inject JavaScript and CSS files by specifying them in a configuration, without having to change the target site every time.
+Useful when you cannot use GTM for loading external scripts or stylesheets.
 
 ## Usage
 
 - Host Jinjector.js and Jinjector.config on a webspace you control
 - Create the scripts you need to inject to the website
 - Install Jinjector once to the target website
-- Add the scripts you need to the configuration file
+- Add the scripts and stylesheets you need to the configuration file
 
 ## Installation
 
@@ -33,6 +33,19 @@ Add the reference to the script files to the configuration file. You can also sp
         "description": "Redirect users from EU because of GDPR",
         "URL": "/EURedirector.js"
       },
+    ],
+  "stylesheets":
+    [
+      {
+        "name": "NiceStyling",
+        "description": "The nice stylesheet",
+        "URL": "/nice.css"
+      },
+      {
+        "name": "Popup related styles",
+        "description": "Styling for all the popups",
+        "URL:": "/popups.css"
+      }
     ]
 }
 ```
