@@ -7,29 +7,40 @@ Jinjector.init = function(){
 	// load the scripts defined in the config file
 	Jinjector.status = 'initializing';
 	try{
-		Jinjector.Xhr.GET('Jinjector.config', function(d){
-			Jinjector.config = JSON.parse(d);
-			Jinjector.status = 'loading';
-			
-			if (Jinjector.config.scripts != null){
-				Jinjector.config.scripts.forEach(function(script){
-						var newScript = document.createElement('script');
-						if (Jinjector.config.outPutOnConsole){
-							console.log('----');
-							console.log('Loading script "' + script.name + '"...');
-							console.log('Description:' + script.description);
-							console.log('URL: ' + script.URL);
-							newScript.onload = function () {
-								console.log('Script "' + script.name + '" has been loaded');
-							};
+		var scripts = document.getElementsByTagName('script');
+		var thisScript = scripts[scripts.length - 1];
+		console.log(thisScript);
+		// this is the standard configuration, in no other has been specified in the attribute
+		// the HTML property is data-configuration-URI
+		var configurationURI = 'Jinjector.config';
+		var configurationsAttr = thisScript.getAttribute("data-configuration-file");
+		
+		if (configurationsAttr != undefined && configurationsAttr != ""){
+			configurationURI = configurationsAttr;
+		}
+		Jinjector.Xhr.GET(configurationURI, function(result){
+			if (result.status < 300){
+				Jinjector.config = JSON.parse(result.body);
+				Jinjector.status = 'loading';
+				if (Jinjector.config.scripts != null){
+					Jinjector.config.scripts.forEach(function(script){
+							var newScript = document.createElement('script');
+							if (Jinjector.config.outPutOnConsole){
+								console.log('----');
+								console.log('Loading script "' + script.name + '"...');
+								console.log('Description:' + script.description);
+								console.log('URL: ' + script.URL);
+								newScript.onload = function () {
+									console.log('Script "' + script.name + '" has been loaded');
+								};
+							}
+							newScript.src = script.URL;
+							document.head.appendChild(newScript);
 						}
-						newScript.src = script.URL;
-						document.head.appendChild(newScript);
-					}
-				);
-			}
-			if (Jinjector.config.stylesheets != null){ 
-				Jinjector.config.stylesheets.forEach(function(stylesheet){
+					);
+				}
+				if (Jinjector.config.stylesheets != null){ 
+					Jinjector.config.stylesheets.forEach(function(stylesheet){
 						var stylesheet = document.createElement("link")
 						if (Jinjector.config.outPutOnConsole){
 							console.log('----');
@@ -44,16 +55,19 @@ Jinjector.init = function(){
 						stylesheet.setAttribute("type", "text/css");
 						stylesheet.setAttribute("href", stylesheet.URL);
 						document.head.appendChild(stylesheet);
-					}
-				);
-			}			
-			Jinjector.status = 'loaded';
+						}
+					);
+				}			
+				Jinjector.status = 'loaded';
+			} else {
+				console.error('An error occurred while reading the Jinjector configuration: HTTP '+result.status);
+				Jinjector.status = 'loading_error_' + result.status;
+			}
 		});
 	} catch(e){
-			console.error('An expection occured while reading the Jinjector configuration: '+ e);
-			Jinjector.status = 'loading_error';
-		}
-
+		console.error('An expection occured while reading the Jinjector configuration: '+ e);
+		Jinjector.status = 'loading_error_JSON';
+	}
 }
 
 
@@ -69,8 +83,11 @@ Jinjector.Xhr={
 		}
 		
 		xmlhttp.onreadystatechange=function(){
-			if (xmlhttp.readyState==4 && xmlhttp.status==200){
-				callback(xmlhttp.responseText);
+			if (xmlhttp.readyState==4){
+				var result = {};
+				result.body = xmlhttp.responseText;
+				result.status = xmlhttp.status;
+				callback(result);
 			}
 		}
 		
@@ -91,7 +108,10 @@ Jinjector.Xhr={
 		
 		xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState==4){
-				callback(xmlhttp.responseText);
+				var result = {};
+				result.body = xmlhttp.responseText;
+				result.status = xmlhttp.status;
+				callback(result);
 			}
 		}
 		
@@ -103,7 +123,6 @@ Jinjector.Xhr={
 		xmlhttp.send(JSON.stringify(body));
 	}
 }
-
 
 if (document.readyState === "complete" || document.readyState === "loaded") {
 	Jinjector.init();
