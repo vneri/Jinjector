@@ -13,8 +13,15 @@ Useful when you cannot use GTM for loading external scripts or stylesheets.
 
 Add Jinjector to the target site:
 ```html
-<script src="Jinjector.js" />
+<script src="Jinjector.js"></script>
 ```
+
+In this case, Jinjector will load the configuration from Jinjector.config.
+If you wish to specify a different configuration file, because you use Jinjector on different pages, then you have to add the data-configuration-file attribute:
+```html
+<script src="Jinjector.js" data-configuration-file="myConfig.json"></script>
+```
+
 
 ## Configuration
 Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console:
