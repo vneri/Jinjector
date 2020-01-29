@@ -41,20 +41,17 @@ Jinjector.init = function(){
 				}
 				if (Jinjector.config.stylesheets != null){ 
 					Jinjector.config.stylesheets.forEach(function(stylesheet){
-						var stylesheet = document.createElement("link")
+						var newStylesheet = document.createElement("link")
 						if (Jinjector.config.outPutOnConsole){
 							console.log('----');
 							console.log('Loading stylesheet "' + stylesheet.name + '"...');
 							console.log('Description:' + stylesheet.description);
 							console.log('URL: ' + stylesheet.URL);
-							newScript.onload = function () {
-								console.log('Script "' + script.name + '" has been loaded');
-							};
 						}
-						stylesheet.setAttribute("rel", "stylesheet");
-						stylesheet.setAttribute("type", "text/css");
-						stylesheet.setAttribute("href", stylesheet.URL);
-						document.head.appendChild(stylesheet);
+						newStylesheet.setAttribute("rel", "stylesheet");
+						newStylesheet.setAttribute("type", "text/css");
+						newStylesheet.setAttribute("href", stylesheet.URL);
+						document.head.appendChild(newStylesheet);
 						}
 					);
 				}			
