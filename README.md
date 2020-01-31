@@ -1,3 +1,4 @@
+![alt text](https://github.com/vneri/Jinjector/blob/master/Jinjector_logo_small.png?raw "Jinjector")
 # Jinjector
 Easily inject JavaScript and CSS files by specifying them in a configuration, without having to change the target site every time.
 Useful when you cannot use GTM for loading external scripts or stylesheets.
