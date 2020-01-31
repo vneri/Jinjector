@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="338.66669mm"
+   height="338.66669mm"
+   viewBox="0 0 338.66668 338.66668"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="Jinjector_logo.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="428.69196"
+     inkscape:cy="440.56989"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1151"
+     inkscape:window-x="1916"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(457.65524,229.89878)">
+    <g
+       id="g913"
+       transform="matrix(1.8360655,0,0,1.8360655,382.62971,-90.937066)">
+      <rect
+         y="-75.684509"
+         x="-457.65521"
+         height="184.45239"
+         width="184.45239"
+         id="rect815"
+         style="opacity:1;vector-effect:none;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:10.99800014;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g
+         transform="matrix(0.99448202,0,0,0.99132131,-108.37086,0.78925919)"
+         id="text819"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:259.28765869px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.05136967"
+         aria-label="J">
+        <path
+           sodipodi:nodetypes="ccccccc"
+           inkscape:connector-curvature="0"
+           id="path871"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:259.28765869px;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';fill:#ffffff;stroke-width:4.05136967"
+           d="M -282.72893,-77.143271 V 39.333607 c 0.51839,42.844206 -35.23156,57.494352 -68.49346,57.732017 V 47.309741 c 14.47805,-0.301907 17.00659,-7.631649 17.09171,-14.686215 V -77.143271 Z" />
+      </g>
+      <flowRoot
+         transform="matrix(0.99512525,0,0,1.5884812,1193.1198,-786.52594)"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot839"
+         xml:space="preserve"><flowRegion
+           id="flowRegion841"><rect
+             y="511.09113"
+             x="-1582.8572"
+             height="168.57143"
+             width="462.85715"
+             id="rect843" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Impact;-inkscape-font-specification:Impact;fill:#ffffff"
+           id="flowPara845">ECTOR</flowPara></flowRoot>      <flowRoot
+         transform="matrix(3.2426015,0,0,2.9288718,4746.867,-1581.668)"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot839-5"
+         xml:space="preserve"><flowRegion
+           id="flowRegion841-4"><rect
+             y="511.09113"
+             x="-1582.8572"
+             height="168.57143"
+             width="462.85715"
+             id="rect843-3" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Impact;-inkscape-font-specification:Impact;fill:#ffffff"
+           id="flowPara845-0">IN</flowPara></flowRoot>    </g>
+  </g>
+</svg>
