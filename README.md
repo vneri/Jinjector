@@ -24,7 +24,7 @@ If you wish to specify a different configuration file, because you use Jinjector
 
 
 ## Configuration
-Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console:
+Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console. With "trigger" you can optionally specify an expression that, when validate to "true" triggers a script or a stylesheet:
 ```javascript
 {
   "outputOnConsole":false,
@@ -33,7 +33,8 @@ Add the reference to the script files to the configuration file. You can also sp
       {
         "name": "Popup Offer January 1st",
         "description": "Shows the offer popup",
-        "URL": "/offerPopupJan.js"
+        "URL": "/offerPopupJan.js",
+        "trigger": "(activatePopup == true)"
       },
       {
         "name": "Redirector",
@@ -51,7 +52,8 @@ Add the reference to the script files to the configuration file. You can also sp
       {
         "name": "Popup related styles",
         "description": "Styling for all the popups",
-        "URL:": "/popups.css"
+        "URL:": "/popups.css",
+        "trigger": "(activatePopup == true)"
       }
     ]
 }

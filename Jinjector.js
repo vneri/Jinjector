@@ -3,6 +3,8 @@
 
 var Jinjector = {};
 
+Jinjector.triggerIntervals = [];
+
 Jinjector.init = function(){
 	// load the scripts defined in the config file
 	Jinjector.status = 'initializing';
@@ -24,13 +26,29 @@ Jinjector.init = function(){
 				Jinjector.status = 'loading';
 				if (Jinjector.config.scripts != null){
 					Jinjector.config.scripts.forEach(function(script){
-							Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
+							if (script.trigger != undefined){
+								Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
+									Jinjector.watch(script.name, script.trigger, function(){
+										Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
+									});
+								}, 500)
+							} else {
+								Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
+							}
 						}
 					);
 				}
 				if (Jinjector.config.stylesheets != null){ 
 					Jinjector.config.stylesheets.forEach(function(stylesheet){
-							Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole)
+							if (stylesheet.trigger != undefined){
+								Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
+									Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
+										Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
+									});
+								}, 500)
+							} else {
+								Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
+							}
 						}
 					);
 				}			
@@ -43,6 +61,16 @@ Jinjector.init = function(){
 	} catch(e){
 		console.error('An expection occured while reading the Jinjector configuration: '+ e);
 		Jinjector.status = 'loading_error_JSON';
+	}
+}
+
+Jinjector.watch = function(name, expression, callback){
+	try{
+		if (eval(expression)){
+			window.clearInterval(Jinjector.triggerIntervals[name]);
+			callback();
+		}
+	} catch{
 	}
 }
 
