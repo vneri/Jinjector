@@ -1,0 +1,26 @@
+{
+	"outputOnConsole":true,
+	"scripts":
+	[
+		{
+			"name": "test1 script",
+			"description": "This is for testing. It only gets loaded when the variable load_script_1 is set to true",
+			"URL": "/example/test1.js",
+			"trigger": "(load_script_1 == true)"
+		},
+		{
+			"name": "test2 script",
+			"description": "This is a second script valid for all configurations",
+			"URL": "/test2.js"
+		}
+	],
+	"stylesheets":
+	[
+		{
+			"name": "test1 stylesheet",
+			"description": "This is for testing",
+			"URL": "https://unpkg.com/purecss@1.0.1/build/pure-min.css",
+			"trigger": "(load_css_1 == true)"
+		}
+	]
+}

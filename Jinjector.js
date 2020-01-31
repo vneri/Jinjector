@@ -14,7 +14,7 @@ Jinjector.init = function(){
 		console.log(thisScript);
 		// this is the standard configuration, in no other has been specified in the attribute
 		// the HTML property is data-configuration-URI
-		var configurationURI = 'Jinjector.config';
+		var configurationURI = 'Jinjector.config.json';
 		var configurationsAttr = thisScript.getAttribute("data-configuration-file");
 		
 		if (configurationsAttr != undefined && configurationsAttr != ""){
