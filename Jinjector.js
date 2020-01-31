@@ -24,34 +24,13 @@ Jinjector.init = function(){
 				Jinjector.status = 'loading';
 				if (Jinjector.config.scripts != null){
 					Jinjector.config.scripts.forEach(function(script){
-							var newScript = document.createElement('script');
-							if (Jinjector.config.outPutOnConsole){
-								console.log('----');
-								console.log('Loading script "' + script.name + '"...');
-								console.log('Description:' + script.description);
-								console.log('URL: ' + script.URL);
-								newScript.onload = function () {
-									console.log('Script "' + script.name + '" has been loaded');
-								};
-							}
-							newScript.src = script.URL;
-							document.head.appendChild(newScript);
+							Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
 						}
 					);
 				}
 				if (Jinjector.config.stylesheets != null){ 
 					Jinjector.config.stylesheets.forEach(function(stylesheet){
-						var newStylesheet = document.createElement("link")
-						if (Jinjector.config.outPutOnConsole){
-							console.log('----');
-							console.log('Loading stylesheet "' + stylesheet.name + '"...');
-							console.log('Description:' + stylesheet.description);
-							console.log('URL: ' + stylesheet.URL);
-						}
-						newStylesheet.setAttribute("rel", "stylesheet");
-						newStylesheet.setAttribute("type", "text/css");
-						newStylesheet.setAttribute("href", stylesheet.URL);
-						document.head.appendChild(newStylesheet);
+							Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole)
 						}
 					);
 				}			
@@ -65,6 +44,41 @@ Jinjector.init = function(){
 		console.error('An expection occured while reading the Jinjector configuration: '+ e);
 		Jinjector.status = 'loading_error_JSON';
 	}
+}
+
+Jinjector.loadScript = function(script, outPutOnConsole){
+	if(typeof outPutOnConsole == undefined) {
+		outPutOnConsole = false;
+	}
+	var newScript = document.createElement('script');
+	if (Jinjector.config.outPutOnConsole){
+		console.log('----');
+		console.log('Loading script "' + script.name + '"...');
+		console.log('Description:' + script.description);
+		console.log('URL: ' + script.URL);
+		newScript.onload = function () {
+			console.log('Script "' + script.name + '" has been loaded');
+		};
+	}
+	newScript.src = script.URL;
+	document.head.appendChild(newScript);
+}
+
+Jinjector.loadStylesheet = function(stylesheet, outPutOnConsole){
+	if(typeof outPutOnConsole == undefined) {
+		outPutOnConsole = false;
+	}
+	var newStylesheet = document.createElement("link")
+	if (Jinjector.config.outPutOnConsole){
+		console.log('----');
+		console.log('Loading stylesheet "' + stylesheet.name + '"...');
+		console.log('Description:' + stylesheet.description);
+		console.log('URL: ' + stylesheet.URL);
+	}
+	newStylesheet.setAttribute("rel", "stylesheet");
+	newStylesheet.setAttribute("type", "text/css");
+	newStylesheet.setAttribute("href", stylesheet.URL);
+	document.head.appendChild(newStylesheet);
 }
 
 
