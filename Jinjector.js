@@ -9,18 +9,26 @@ Jinjector.init = function(){
 	// load the scripts defined in the config file
 	Jinjector.status = 'initializing';
 	try{
+		// search for the script, so we can read the configuration
 		var scripts = document.getElementsByTagName('script');
-		var thisScript = scripts[scripts.length - 1];
-		console.log(thisScript);
+		var thisScript;
+		for (var i = 0; i< scripts.length; i++){
+			if (scripts[i].src.indexOf('Jinjector.js')!=-1){
+				thisScript = scripts[i];
+			}
+		};
+				
 		// this is the standard configuration, in no other has been specified in the attribute
-		// the HTML property is data-configuration-URI
+		// the HTML property is data-configuration-file
 		var configurationURI = 'Jinjector.config.json';
-		var configurationsAttr = thisScript.getAttribute("data-configuration-file");
+		if (thisScript != undefined)
+			var configurationsAttr = thisScript.getAttribute("data-configuration-file");
 		
 		if (configurationsAttr != undefined && configurationsAttr != ""){
 			configurationURI = configurationsAttr;
 		}
 		Jinjector.Xhr.GET(configurationURI, function(result){
+		console.log(configurationURI);
 			if (result.status < 300){
 				Jinjector.config = JSON.parse(result.body);
 				Jinjector.status = 'loading';
