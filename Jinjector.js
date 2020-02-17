@@ -21,46 +21,20 @@ Jinjector.init = function(){
 		// this is the standard configuration, in no other has been specified in the attribute
 		// the HTML property is data-configuration-file
 		var configurationURI = 'Jinjector.config.json';
-		if (thisScript != undefined)
+		var configurationType = thisScript.getAttribute("data-configuration-jsonp");
+			if (configurationType != undefined){
+				// configuration will be loaded by config file
+				return;
+			}
+		if (thisScript != undefined){
 			var configurationsAttr = thisScript.getAttribute("data-configuration-file");
-		
+		}
 		if (configurationsAttr != undefined && configurationsAttr != ""){
 			configurationURI = configurationsAttr;
 		}
 		Jinjector.Xhr.GET(configurationURI, function(result){
-		console.log(configurationURI);
 			if (result.status < 300){
-				Jinjector.config = JSON.parse(result.body);
-				Jinjector.status = 'loading';
-				if (Jinjector.config.scripts != null){
-					Jinjector.config.scripts.forEach(function(script){
-							if (script.trigger != undefined){
-								Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
-									Jinjector.watch(script.name, script.trigger, function(){
-										Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
-									});
-								}, 500)
-							} else {
-								Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
-							}
-						}
-					);
-				}
-				if (Jinjector.config.stylesheets != null){ 
-					Jinjector.config.stylesheets.forEach(function(stylesheet){
-							if (stylesheet.trigger != undefined){
-								Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
-									Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
-										Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
-									});
-								}, 500)
-							} else {
-								Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
-							}
-						}
-					);
-				}			
-				Jinjector.status = 'loaded';
+				Jinjector.executeConf(result.body);
 			} else {
 				console.error('An error occurred while reading the Jinjector configuration: HTTP '+result.status);
 				Jinjector.status = 'loading_error_' + result.status;
@@ -71,6 +45,40 @@ Jinjector.init = function(){
 		Jinjector.status = 'loading_error_JSON';
 	}
 }
+
+Jinjector.executeConf = function(confText){
+	Jinjector.config = JSON.parse(confText);
+	Jinjector.status = 'loading';
+	if (Jinjector.config.scripts != null){
+		Jinjector.config.scripts.forEach(function(script){
+				if (script.trigger != undefined){
+					Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
+						Jinjector.watch(script.name, script.trigger, function(){
+							Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
+						});
+					}, 500)
+				} else {
+					Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
+				}
+			}
+		);
+	}
+	if (Jinjector.config.stylesheets != null){ 
+		Jinjector.config.stylesheets.forEach(function(stylesheet){
+				if (stylesheet.trigger != undefined){
+					Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
+						Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
+							Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
+						});
+					}, 500)
+				} else {
+					Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
+				}
+			}
+		);
+	}			
+	Jinjector.status = 'loaded';
+};
 
 Jinjector.watch = function(name, expression, callback){
 	try{
