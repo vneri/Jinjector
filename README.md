@@ -21,6 +21,7 @@ If you wish to specify a different configuration file, because you use Jinjector
 ```html
 <script src="Jinjector.js" data-configuration-file="myConfig.json"></script>
 ```
+
 ### Avoiding CORS with JSONP
 If the server on which you are hosting Jinjector does not support CORS, you can use JSONP for loading the configuration.
 In order to do so, include the following lines for the installation:
@@ -35,7 +36,9 @@ Jinjector.executeConf('{  "outputOnConsole":false,  "scripts":    [      {      
 ```
 
 ## Configuration
-Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console. With "trigger" you can optionally specify an expression that, when validate to "true" triggers a script or a stylesheet:
+Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console. 
+With "trigger" you can optionally specify an expression that, when validate to "true" triggers a script or a stylesheet.
+With "attributes" you can add attributes to the script (like data-attributes).
 ```javascript
 {
   "outputOnConsole":false,
@@ -45,7 +48,14 @@ Add the reference to the script files to the configuration file. You can also sp
         "name": "Popup Offer January 1st",
         "description": "Shows the offer popup",
         "URL": "/offerPopupJan.js",
-        "trigger": "(activatePopup == true)"
+        "trigger": "(activatePopup == true)",
+		  "attributes":
+			[
+			 {				
+			  "name": "data-test",
+			  "value": "test"
+			 }
+			]
       },
       {
         "name": "Redirector",

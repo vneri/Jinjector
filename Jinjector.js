@@ -104,6 +104,13 @@ Jinjector.loadScript = function(script, outPutOnConsole){
 			console.log('Script "' + script.name + '" has been loaded');
 		};
 	}
+	console.log(script);
+	// set passed attributes
+	if (script.attributes != undefined){
+		for (var a=0; a < script.attributes.length; a++){
+			newScript.setAttribute(script.attributes[a].name, script.attributes[a].value);
+		}
+	}
 	newScript.src = script.URL;
 	document.head.appendChild(newScript);
 }
