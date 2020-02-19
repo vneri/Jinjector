@@ -47,36 +47,42 @@ Jinjector.init = function(){
 }
 
 Jinjector.executeConf = function(confText){
+	if (confText == "" || confText == undefined){
+		return;
+	}
 	Jinjector.config = JSON.parse(confText);
 	Jinjector.status = 'loading';
 	if (Jinjector.config.scripts != null){
 		Jinjector.config.scripts.forEach(function(script){
-				if (script.trigger != undefined){
-					Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
-						Jinjector.watch(script.name, script.trigger, function(){
-							Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
-						});
-					}, 500)
-				} else {
-					Jinjector.loadScript(script, Jinjector.config.outPutOnConsole);
-				}
+			if ((script.trigger != undefined)&&(!(eval(script.trigger)))){
+				Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
+					Jinjector.watch(script.name, script.trigger, function(){
+						Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
+					});
+				}, 500)
+			} else {
+				Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
 			}
-		);
+		});
 	}
 	if (Jinjector.config.stylesheets != null){ 
 		Jinjector.config.stylesheets.forEach(function(stylesheet){
-				if (stylesheet.trigger != undefined){
-					Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
-						Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
-							Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
-						});
-					}, 500)
-				} else {
-					Jinjector.loadStylesheet(stylesheet, Jinjector.config.outPutOnConsole);
-				}
+			if (stylesheet.trigger != undefined){
+				Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
+					Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
+						Jinjector.loadStylesheet(stylesheet, Jinjector.config.outputOnConsole);
+					});
+				}, 500)
+			} else {
+				Jinjector.loadStylesheet(stylesheet, Jinjector.config.outputOnConsole);
 			}
-		);
-	}			
+		});
+	}
+	if (Jinjector.config.html != null){ 
+		Jinjector.config.html.forEach(function(html){
+			Jinjector.loadHTML(html, Jinjector.config.outputOnConsole);
+		});
+	}
 	Jinjector.status = 'loaded';
 };
 
@@ -86,16 +92,17 @@ Jinjector.watch = function(name, expression, callback){
 			window.clearInterval(Jinjector.triggerIntervals[name]);
 			callback();
 		}
-	} catch{
+	} catch(e){
+		console.error('An error occurred while evaluating a trigger ' +e);
 	}
 }
 
-Jinjector.loadScript = function(script, outPutOnConsole){
-	if(typeof outPutOnConsole == undefined) {
-		outPutOnConsole = false;
+Jinjector.loadScript = function(script, outputOnConsole){
+	if(typeof outputOnConsole == undefined) {
+		outputOnConsole = false;
 	}
 	var newScript = document.createElement('script');
-	if (Jinjector.config.outPutOnConsole){
+	if (Jinjector.config.outputOnConsole){
 		console.log('----');
 		console.log('Loading script "' + script.name + '"...');
 		console.log('Description:' + script.description);
@@ -104,23 +111,34 @@ Jinjector.loadScript = function(script, outPutOnConsole){
 			console.log('Script "' + script.name + '" has been loaded');
 		};
 	}
-	console.log(script);
-	// set passed attributes
-	if (script.attributes != undefined){
-		for (var a=0; a < script.attributes.length; a++){
-			newScript.setAttribute(script.attributes[a].name, script.attributes[a].value);
+	// loading inline or as <script> meta tag
+	if (script.inlineLoading){
+		Jinjector.Xhr.GET(script.URL, function(result){
+			if (result != undefined && (result.status < 300) && result.body != "" && result.body != undefined){
+				if (Jinjector.config.outputOnConsole){
+					console.log('Inline loading ' + script.URL);
+				}		
+				eval(result.body);
+			}
+		});
+	} else {
+		// set passed attributes
+		if (script.attributes != undefined){
+			for (var a=0; a < script.attributes.length; a++){
+				newScript.setAttribute(script.attributes[a].name, script.attributes[a].value);
+			}
 		}
+		newScript.src = script.URL;
+		document.head.insertAdjacentElement('afterbegin', newScript);
 	}
-	newScript.src = script.URL;
-	document.head.appendChild(newScript);
 }
 
-Jinjector.loadStylesheet = function(stylesheet, outPutOnConsole){
-	if(typeof outPutOnConsole == undefined) {
-		outPutOnConsole = false;
+Jinjector.loadStylesheet = function(stylesheet, outputOnConsole){
+	if(typeof outputOnConsole == undefined) {
+		outputOnConsole = false;
 	}
 	var newStylesheet = document.createElement("link")
-	if (Jinjector.config.outPutOnConsole){
+	if (Jinjector.config.outputOnConsole){
 		console.log('----');
 		console.log('Loading stylesheet "' + stylesheet.name + '"...');
 		console.log('Description:' + stylesheet.description);
@@ -130,6 +148,21 @@ Jinjector.loadStylesheet = function(stylesheet, outPutOnConsole){
 	newStylesheet.setAttribute("type", "text/css");
 	newStylesheet.setAttribute("href", stylesheet.URL);
 	document.head.appendChild(newStylesheet);
+}
+
+Jinjector.loadHTML = function(html, outputOnConsole){
+	Jinjector.Xhr.GET(html.URL, function(result){
+		if (result != undefined && (result.status < 300) && result.body != "" && result.body != undefined){
+			var targetElements = document.querySelectorAll(html.targetElement);
+			for (var el=0; el < targetElements.length; el++){
+				targetElements[el].insertAdjacentHTML('afterbegin', result.body);
+				if (outputOnConsole){
+					console.log('HTML text "'+html.name+'" loaded into element ' + targetElements[el]);
+				}
+			}	
+		}
+	});
+
 }
 
 
@@ -186,8 +219,16 @@ Jinjector.Xhr={
 	}
 }
 
+Jinjector.DOMContentLoaded = function(){
+	return document.readyState === "complete" || document.readyState === "loaded";
+}
+
+Jinjector.init();
+
+/*
 if (document.readyState === "complete" || document.readyState === "loaded") {
 	Jinjector.init();
 } else {
 	document.addEventListener('DOMContentLoaded', Jinjector.init);
 }
+*/
