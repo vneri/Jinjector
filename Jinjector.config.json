@@ -28,7 +28,7 @@
 			"name": "test1 stylesheet",
 			"description": "This is for testing",
 			"URL": "https://unpkg.com/purecss@1.0.1/build/pure-min.css",
-			"trigger": "(load_css_1 == true)"
+			"trigger": "(load_css_1 == true) && (Jinjector.DOMContentLoaded)"
 		}
 	],
 	"html":
