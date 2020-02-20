@@ -54,15 +54,19 @@ Jinjector.executeConf = function(confText){
 	Jinjector.status = 'loading';
 	if (Jinjector.config.scripts != null){
 		Jinjector.config.scripts.forEach(function(script){
-			if ((script.trigger != undefined)&&(!(eval(script.trigger)))){
-				Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
-					Jinjector.watch(script.name, script.trigger, function(){
-						Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
-					});
-				}, 500)
-			} else {
-				Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
-			}
+			try{
+				if ( (script.trigger != undefined) && !Jinjector.safeEval(script.trigger) ){
+					Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
+						Jinjector.watch(script.name, script.trigger, function(){
+							Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
+						});
+					}, 500)
+				} else {
+					Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
+				}
+			} catch(e){
+				console.error(e);
+			}			
 		});
 	}
 	if (Jinjector.config.stylesheets != null){ 
@@ -83,16 +87,46 @@ Jinjector.executeConf = function(confText){
 			Jinjector.loadHTML(html, Jinjector.config.outputOnConsole);
 		});
 	}
+
+	if (Jinjector.config.functionIntercepts != null){
+		Jinjector.config.functionIntercepts.forEach(function(functionIntercept){
+			try{
+				if ( eval(functionIntercept.functionName) != ""){
+					eval(functionIntercept.functionName+ ' =  Jinjector.intercept(functionIntercept, Jinjector.config.outputOnConsole);');
+				}
+			}catch{
+				Jinjector.triggerIntervals[functionIntercept.functionName] = window.setInterval(function(){
+					Jinjector.watch(functionIntercept.functionName, functionIntercept.functionName, function(){
+						eval(functionIntercept.functionName+ ' = Jinjector.intercept(functionIntercept, Jinjector.config.outputOnConsole);');
+					});
+				}, 500);
+			};		
+		});
+	}
+	
 	Jinjector.status = 'loaded';
 };
 
+Jinjector.safeEval = function(expression){
+	try{
+		if (eval('typeof('+expression+') == "function"')){
+			return true;
+		} else {
+			return eval(expression);
+		}
+	}catch{
+		return false;
+	}
+}
+
 Jinjector.watch = function(name, expression, callback){
 	try{
-		if (eval(expression)){
+		if (Jinjector.safeEval(expression)){
 			window.clearInterval(Jinjector.triggerIntervals[name]);
 			callback();
 		}
 	} catch(e){
+		window.clearInterval(Jinjector.triggerIntervals[name]);
 		console.error('An error occurred while evaluating a trigger ' +e);
 	}
 }
@@ -117,7 +151,7 @@ Jinjector.loadScript = function(script, outputOnConsole){
 			if (result != undefined && (result.status < 300) && result.body != "" && result.body != undefined){
 				if (Jinjector.config.outputOnConsole){
 					console.log('Inline loading ' + script.URL);
-				}		
+				}
 				eval(result.body);
 			}
 		});
@@ -162,9 +196,47 @@ Jinjector.loadHTML = function(html, outputOnConsole){
 			}	
 		}
 	});
-
 }
 
+Jinjector.intercept = function (functionIntercept, outputOnConsole){
+	try{
+		eval('functionIntercept.originalFunction = eval(functionIntercept.functionName)');
+		functionIntercept.functionToHandleResult = eval(functionIntercept.functionToHandleResult);
+		functionIntercept.functionToCallBefore = eval(functionIntercept.functionToCallBefore);
+		functionIntercept.functionToHandleExceptions = eval(functionIntercept.functionToHandleExceptions);
+
+	}catch(e){
+		console.error(e);
+		return null;
+	}
+	return function(){
+		// check if a function to call before has been passed
+		if (functionIntercept.functionToCallBefore != undefined && functionIntercept.functionToCallBefore != null){
+			if (outputOnConsole){
+				console.log('Calling function for '+functionIntercept.functionName);
+			}
+			functionIntercept.functionToCallBefore();
+		}
+		// check if a function to handle the result has been passed, otherwise just return the result
+		if (functionIntercept.functionToHandleResult == undefined || functionIntercept.functionToHandleResult == null){
+			functionIntercept.functionToHandleResult = function(result){
+				console.log('No handleResult defined');
+				return result;
+			}
+		}
+		try{
+			// call the original function
+			return (functionIntercept.functionToHandleResult(functionIntercept.originalFunction.apply(null, arguments)));
+		} catch(e){
+			if (functionIntercept.functionToHandleExceptions != null && functionIntercept.functionToHandleExceptions != undefined){
+				console.error(e);
+				functionIntercept.functionToHandleExceptions(e);
+			} else {
+				throw(e);
+			}
+		}
+	}
+};
 
 // provide self-contained AJAX functions
 

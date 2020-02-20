@@ -19,7 +19,7 @@
 		{
 			"name": "test2 script",
 			"description": "This is a second script valid for all configurations",
-			"URL": "/test2.js"
+			"URL": "test2.js"
 		}
 	],
 	"stylesheets":
@@ -37,6 +37,15 @@
 			"name": "test Snippet",
 			"URL":"test_Snippet.txt",
 			"targetElement": "head"
+		}
+	],
+	"functionIntercepts":
+	[
+		{
+			"functionName": "testFunction",
+			"functionToCallBefore": "before",
+			"functionToHandleResult": "testFunction2",
+			"functionToHandleExceptions": null
 		}
 	]
 }
