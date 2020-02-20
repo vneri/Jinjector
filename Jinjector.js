@@ -88,15 +88,40 @@ Jinjector.executeConf = function(confText){
 		});
 	}
 
+	Jinjector.functionAvailableOrNotNeeded = function(singleFunction, reallyNeeded){
+		// this checks if the given function is available
+		if ((singleFunction != "") && (singleFunction != undefined) && (singleFunction != null)){
+			return (eval('window.'+singleFunction) != undefined)
+		} else {
+			if (reallyNeeded == true){
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	Jinjector.interceptFunctionsAvailableOrNotNeeded = function(functionIntercept){
+		return Jinjector.functionAvailableOrNotNeeded(functionIntercept.functionName, true)
+				&&
+				Jinjector.functionAvailableOrNotNeeded(functionIntercept.functionToHandleResult)
+				&&
+				Jinjector.functionAvailableOrNotNeeded(functionIntercept.functionToCallBefore)
+				&&
+				Jinjector.functionAvailableOrNotNeeded(functionIntercept.functionToHandleExceptions);
+	}
+
 	if (Jinjector.config.functionIntercepts != null){
-		Jinjector.config.functionIntercepts.forEach(function(functionIntercept){
-			try{
-				if ( eval(functionIntercept.functionName) != ""){
-					eval(functionIntercept.functionName+ ' =  Jinjector.intercept(functionIntercept, Jinjector.config.outputOnConsole);');
-				}
-			}catch{
+		Jinjector.config.functionIntercepts.forEach(function(functionIntercept, interceptIndex){
+			if (Jinjector.config.outputOnConsole){
+				console.log('Evaluating the interception nr '+interceptIndex+' of function ' + functionIntercept.functionName);
+			}
+
+			if (Jinjector.interceptFunctionsAvailableOrNotNeeded(functionIntercept)){
+				eval(functionIntercept.functionName+ ' =  Jinjector.intercept(functionIntercept, Jinjector.config.outputOnConsole);');
+			} else {
 				Jinjector.triggerIntervals[functionIntercept.functionName] = window.setInterval(function(){
-					Jinjector.watch(functionIntercept.functionName, functionIntercept.functionName, function(){
+					Jinjector.watch(functionIntercept.functionName,'Jinjector.interceptFunctionsAvailableOrNotNeeded(Jinjector.config.functionIntercepts['+interceptIndex+'])' , function(){
 						eval(functionIntercept.functionName+ ' = Jinjector.intercept(functionIntercept, Jinjector.config.outputOnConsole);');
 					});
 				}, 500);
@@ -204,7 +229,9 @@ Jinjector.intercept = function (functionIntercept, outputOnConsole){
 		functionIntercept.functionToHandleResult = eval(functionIntercept.functionToHandleResult);
 		functionIntercept.functionToCallBefore = eval(functionIntercept.functionToCallBefore);
 		functionIntercept.functionToHandleExceptions = eval(functionIntercept.functionToHandleExceptions);
-
+		if (outputOnConsole){
+			console.log('Intercepting function: '+ functionIntercept.functionName);
+		}
 	}catch(e){
 		console.error(e);
 		return null;
@@ -220,7 +247,6 @@ Jinjector.intercept = function (functionIntercept, outputOnConsole){
 		// check if a function to handle the result has been passed, otherwise just return the result
 		if (functionIntercept.functionToHandleResult == undefined || functionIntercept.functionToHandleResult == null){
 			functionIntercept.functionToHandleResult = function(result){
-				console.log('No handleResult defined');
 				return result;
 			}
 		}
