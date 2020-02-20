@@ -20,7 +20,8 @@ If you wish to specify a different configuration file, because you use Jinjector
 ```html
 <script src="Jinjector.js" data-configuration-file="myConfig.json"></script>
 ```
-        Please beware that all the paths should be absolute paths, unless Jinjector.js and the configuration file are hosted in the same folder as the integrating website.
+        Please beware that all the paths should be absolute paths, unless 
+	Jinjector.js and the configuration file are hosted in the same folder as the integrating website.
 
 ### Avoiding CORS with JSONP
 If the server on which you are hosting Jinjector does not support CORS, you can use JSONP for loading the configuration.
@@ -54,13 +55,13 @@ With "attributes" you can add attributes to the script (like data-attributes).
         "description": "Shows the offer popup",
         "URL": "/offerPopupJan.js",
         "trigger": "(activatePopup == true)",
-		  "attributes":
-			[
-			 {				
-			  "name": "data-test",
-			  "value": "test"
-			 }
-			]
+	  "attributes":
+		[
+		 {				
+		  "name": "data-test",
+		  "value": "test"
+		 }
+		]
       },
       {
         "name": "Redirector",
