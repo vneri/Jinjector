@@ -139,7 +139,7 @@ Jinjector.safeEval = function(expression){
 		} else {
 			return eval(expression);
 		}
-	}catch{
+	}catch(e){
 		return false;
 	}
 }
