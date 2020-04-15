@@ -71,9 +71,34 @@ In order to trigger scripts after the document has finished loading, you can use
 ```
 
 ## Configuration
-Add the reference to the script files to the configuration file. You can also specify, whether Jinjector gives a status over the console. 
-With "trigger" you can optionally specify an expression that, when validate to "true" triggers a script or a stylesheet.
-With "attributes" you can add attributes to the script (like data-attributes).
+In the configuration file, you specify the files to be injected and some options.
+
+### General options and features
+"outputOnConsole": with this, you can switch on verbose mode on console
+"scripts[]": configuration for loading JavaScript files
+"stylesheets[]": options for loading CSS stylesheets
+"html[]": options for loading and injecting raw HTML
+"functionIntercepts[]": options for manipulating and intercepting JavaScript functions in the running context
+
+#### Options valid for scripts, stylesheets and html
+"name": An short identifier
+"description": A longer description, use this for reference and documentation
+"URL": The URL from where to load the file from. Please note that relative paths relate to where Jinjector.js is hosted
+"trigger": This applies to scripts and stylesheets only. A JavaScript expression that has to evaluate to "true", in order for the file to be loaded and injected
+
+#### Script specific options
+"inlineLoading": When this is set to true, the given script is loaded via AJAX and executed with eval
+"attributes": This applies to script not loaded inline, but via an injected script tag. You can specify what attributes have to be added to the script tag
+"attributes[]": Inside of the array, object with "name" and "value" for the attributes are expected
+
+#### Function Intercepts
+This special feature allows you to capture function calls.
+"functionName": Exact name of the function that needs to be intercepted
+"functionToCallBefore": If specified, this function is called before the intercepted function
+"functionToHandleResult": If specified, this function acts as a proxy for the result, and can modify it
+"functionToHandleExceptions": If specified, this function wraps the intercepted function and is called in case of an expection
+
+### Example configuration file
 ```javascript
 {
   "outputOnConsole":false,
@@ -95,7 +120,8 @@ With "attributes" you can add attributes to the script (like data-attributes).
       {
         "name": "Redirector",
         "description": "Redirect users from EU because of GDPR",
-        "URL": "/EURedirector.js"
+        "URL": "/EURedirector.js",
+        "inlineLoading": true
       },
     ],
   "stylesheets":
