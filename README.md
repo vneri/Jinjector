@@ -44,25 +44,6 @@ There are many things that you can do with Jinjector. You can:
 - Prepend code to existing functions, manipulate their return value
 - Load the configuration via JSONP (avoid CORS)
 
-### Function Intercepts
-Add the following section to the configuration file:
-```javascript
- "functionIntercepts":
-	[
-	  {
-		"functionName": "replaceMe",
-		"functionToCallBefore": "executeBefore",
-		"functionToHandleResult": "changeTheResult",
-		"functionToHandleExceptions": "captureExceptions"
-      }
-	]
-```
-- functionName: the name of the function you want to manipulate. Use with wisdom
-- functionToCallBefore: the function you want to be called just before the target function
-- functionToHandleResult: the function that can modify the result of the target function
-- functionToHandleExceptions: the function you use to trap exceptions
-
-Just set the options you need and leave the other out or set them to null.
 
 ### Waiting for the document to be loaded
 In order to trigger scripts after the document has finished loading, you can use the following internal function as trigger:
@@ -74,30 +55,34 @@ In order to trigger scripts after the document has finished loading, you can use
 In the configuration file, you specify the files to be injected and some options.
 
 ### General options and features
+```javascript
 "outputOnConsole": with this, you can switch on verbose mode on console
 "scripts[]": configuration for loading JavaScript files
 "stylesheets[]": options for loading CSS stylesheets
 "html[]": options for loading and injecting raw HTML
 "functionIntercepts[]": options for manipulating and intercepting JavaScript functions in the running context
-
+```
 #### Options valid for scripts, stylesheets and html
+```javascript
 "name": An short identifier
 "description": A longer description, use this for reference and documentation
 "URL": The URL from where to load the file from. Please note that relative paths relate to where Jinjector.js is hosted
 "trigger": This applies to scripts and stylesheets only. A JavaScript expression that has to evaluate to "true", in order for the file to be loaded and injected
-
+```
 #### Script specific options
+```javascript
 "inlineLoading": When this is set to true, the given script is loaded via AJAX and executed with eval
 "attributes": This applies to script not loaded inline, but via an injected script tag. You can specify what attributes have to be added to the script tag
 "attributes[]": Inside of the array, object with "name" and "value" for the attributes are expected
-
+```
 #### Function Intercepts
 This special feature allows you to capture function calls.
+```javascript
 "functionName": Exact name of the function that needs to be intercepted
 "functionToCallBefore": If specified, this function is called before the intercepted function
 "functionToHandleResult": If specified, this function acts as a proxy for the result, and can modify it
 "functionToHandleExceptions": If specified, this function wraps the intercepted function and is called in case of an expection
-
+```
 ### Example configuration file
 ```javascript
 {
