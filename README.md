@@ -65,9 +65,10 @@ In the configuration file, you specify the files to be injected and some options
 - "description": A longer description, use this for reference and documentation
 - "URL": The URL from where to load the file from. Please note that relative paths relate to where Jinjector.js is hosted
 - "trigger": This applies to scripts and stylesheets only. A JavaScript expression that has to evaluate to "true", in order for the file to be loaded and injected
+- "checkTriggerOnce": If this is set to "true", then the trigger is only checked once and not until the trigger is fired. Useful, if you need have a page URL as trigger.
 
 #### Script specific options
-- "inlineLoading": When this is set to true, the given script is loaded via AJAX and executed with eval
+- "inlineLoading": When this is set to "true", the given script is loaded via AJAX and executed with eval
 - "attributes": This applies to script not loaded inline, but via an injected script tag. You can specify what attributes have to be added to the script tag
 - "attributes[]": Inside of the array, object with "name" and "value" for the attributes are expected
 

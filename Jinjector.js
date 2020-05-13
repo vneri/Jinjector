@@ -56,11 +56,14 @@ Jinjector.executeConf = function(confText){
 		Jinjector.config.scripts.forEach(function(script){
 			try{
 				if ( (script.trigger != undefined) && !Jinjector.safeEval(script.trigger) ){
-					Jinjector.triggerIntervals[script.name] = window.setInterval(function(){
-						Jinjector.watch(script.name, script.trigger, function(){
+					Jinjector.triggerIntervals[script.name] = window.setInterval(function () {
+						Jinjector.watch(script.name, script.trigger, function () {
 							Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
 						});
-					}, 500)
+					}, 500);
+					if ((script.trigger.checkTriggerOnce != undefined) && (script.trigger.checkTriggerOnce)) {
+						clearInterval(Jinjector.triggerIntervals[script.name]);
+					}
 				} else {
 					Jinjector.loadScript(script, Jinjector.config.outputOnConsole);
 				}
@@ -72,11 +75,14 @@ Jinjector.executeConf = function(confText){
 	if (Jinjector.config.stylesheets != null){ 
 		Jinjector.config.stylesheets.forEach(function(stylesheet){
 			if (stylesheet.trigger != undefined){
-				Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function(){
-					Jinjector.watch(stylesheet.name, stylesheet.trigger, function(){
+				Jinjector.triggerIntervals[stylesheet.name] = window.setInterval(function () {
+					Jinjector.watch(stylesheet.name, stylesheet.trigger, function () {
 						Jinjector.loadStylesheet(stylesheet, Jinjector.config.outputOnConsole);
 					});
-				}, 500)
+				}, 500);
+				if ((stylesheet.trigger.checkTriggerOnce != undefined) && (stylesheet.trigger.checkTriggerOnce)) {
+					clearInterval(Jinjector.triggerIntervals[stylesheet.name]);
+				}
 			} else {
 				Jinjector.loadStylesheet(stylesheet, Jinjector.config.outputOnConsole);
 			}
