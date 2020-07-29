@@ -193,7 +193,7 @@ Jinjector.loadScript = function(script, outputOnConsole){
 				newScript.setAttribute(script.attributes[a].name, script.attributes[a].value);
 			}
 		}
-		newScript.src = script.URL;
+		newScript.src = Jinjector.Xhr.cacheURL(script.URL);
 		document.head.insertAdjacentElement('afterbegin', newScript);
 	}
 }
@@ -211,7 +211,7 @@ Jinjector.loadStylesheet = function(stylesheet, outputOnConsole){
 	}
 	newStylesheet.setAttribute("rel", "stylesheet");
 	newStylesheet.setAttribute("type", "text/css");
-	newStylesheet.setAttribute("href", stylesheet.URL);
+	newStylesheet.setAttribute("href", Jinjector.Xhr.cacheURL(stylesheet.URL));
 	document.head.appendChild(newStylesheet);
 }
 
@@ -289,12 +289,21 @@ Jinjector.Xhr={
 				callback(result);
 			}
 		}
-		
-		xmlhttp.open("GET",url,true);
+		// automatically disable caching
+		xmlhttp.open("GET", Jinjector.Xhr.cacheURL(url),true);
 		if (auth != undefined)
 			xmlhttp.setRequestHeader("Authorization", "Basic " + btoa(auth['username'] + ":" + auth['password']));
 		xmlhttp.send(body);
 	},
+	cacheURL: function (url) {
+		// add anti-caching parameters at the end of the URL
+		// take existing ? into consideration
+		if (url.indexOf('?') != -1) {
+			return url + "&" + new Date().getTime();
+		} else {
+			return url + "?" + new Date().getTime();
+        }
+    },
 
 	POST:function(url, callback, body, auth, contentType){
 		var xmlhttp;
@@ -303,8 +312,7 @@ Jinjector.Xhr={
 		} else {// code for IE6, IE5
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 		}		
-		
-		
+
 		xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState==4){
 				var result = {};
