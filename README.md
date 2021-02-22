@@ -47,7 +47,7 @@ There are many things that you can do with Jinjector. You can:
 ### Waiting for the document to be loaded
 In order to trigger scripts after the document has finished loading, you can use the following internal function as trigger:
 ```javascript
-"trigger": "(Jinjector.DOMContentLoaded)"
+"trigger": "(Jinjector.DOMContentLoaded())"
 ```
 
 ## Configuration
